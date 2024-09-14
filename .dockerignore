@@ -1,0 +1,24 @@
+# Ignore Git repository data
+.git
+
+# Ignore build artifacts
+bin/
+dist/
+*.exe
+*.so
+*.dylib
+
+# Ignore logs
+*.log
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore temporary files
+*.tmp
+*.swp
+
+# Ignore Dockerfile and dockerignore itself
+Dockerfile
+.dockerignore

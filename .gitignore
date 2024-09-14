@@ -1,0 +1,26 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.bin
+
+# Build directories
+bin/
+out/
+dist/
+
+# Go dependencies
+vendor/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
