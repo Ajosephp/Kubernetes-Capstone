@@ -1,3 +1,3 @@
-module github.com/Ajosephp/4016Assignment01
+module github.com/Ajosephp/4016Assignment
 
 go 1.22.5
