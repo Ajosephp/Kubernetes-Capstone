@@ -11,7 +11,7 @@ import (
 // homeHandler serves the "/" route with a simple hello message.
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "Hello, welcome to my API! \nCOMP4016 - A01325136 - Andrew")
+	fmt.Fprintf(w, "Hello, welcome to my API! \nCOMP4016 - Andrew")
 }
 
 func fooHandler(w http.ResponseWriter, r *http.Request) {
@@ -52,4 +52,33 @@ func killHandler(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(1 * time.Second)
 		stop <- os.Interrupt
 	}()
+}
+
+// Assign02 Below:
+// configValueHandler retrieves the value from a ConfigMap
+func configValueHandler(w http.ResponseWriter, r *http.Request) {
+	value := os.Getenv("CONFIG_VALUE")
+	if value == "" {
+		http.Error(w, "configValue not found", http.StatusInternalServerError)
+		return
+	}
+	fmt.Fprint(w, value)
+}
+
+func secretValueHandler(w http.ResponseWriter, r *http.Request) {
+	value := os.Getenv("SECRET_VALUE")
+	if value == "" {
+		http.Error(w, "secretValue not found", http.StatusInternalServerError)
+		return
+	}
+	fmt.Fprint(w, value)
+}
+
+func envValueHandler(w http.ResponseWriter, r *http.Request) {
+	value := os.Getenv("ENV_VALUE")
+	if value == "" {
+		http.Error(w, "envValue not found", http.StatusInternalServerError)
+		return
+	}
+	fmt.Fprint(w, value)
 }

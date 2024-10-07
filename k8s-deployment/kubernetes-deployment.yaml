@@ -1,0 +1,84 @@
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: apeterson30
+
+---
+
+# ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: apeterson30
+data:
+  configValue: snake
+
+---
+
+# Secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secret
+  namespace: apeterson30
+type: Opaque
+data:
+  secretValue: c2VjcmV0U25ha2U= # 'secretSnake' encoded in base64
+                                # used echo -n 'secret-value-here' | base64
+
+---
+
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-gs-ping-deployment
+  namespace: apeterson30
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docker-gs-ping
+  template:
+    metadata:
+      labels:
+        app: docker-gs-ping
+    spec:
+      containers:
+      - name: docker-gs-ping
+        image: apeterson30/assignment02:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: CONFIG_VALUE
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: configValue
+        - name: SECRET_VALUE
+          valueFrom:
+            secretKeyRef:
+              name: app-secret
+              key: secretValue
+        - name: ENV_VALUE
+          value: environmentSnake
+
+---
+
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-gs-ping-service
+  namespace: apeterson30
+spec:
+  type: NodePort
+  selector:
+    app: docker-gs-ping
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30000

@@ -18,6 +18,9 @@ func main() {
 	mux.HandleFunc("/foo", fooHandler)
 	mux.HandleFunc("/hello", helloHandler)
 	mux.HandleFunc("/kill", killHandler)
+	mux.HandleFunc("/configValue", configValueHandler)
+	mux.HandleFunc("/secretValue", secretValueHandler)
+	mux.HandleFunc("/envValue", envValueHandler)
 
 	srv := &http.Server{
 		Addr:    ":8080",

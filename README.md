@@ -1,6 +1,6 @@
 ### README:
 
-# Assignment 01 - Go Application with Docker
+# Assignment 02 - Go Application with Docker
 
 ## Description
 
@@ -21,11 +21,11 @@ This is a simple Go application that supports three endpoints:
 
 To pull the Docker image, use the following command:
 ```bash
-docker pull apeterson30/assignment01
+docker pull apeterson30/assignment02:latest
 ```
 Run the container and map port 8080:
 ```bash
-docker run -p 8080:8080 apeterson30/assignment01
+docker run -p 8080:8080 apeterson30/assignment02:latest
 ```
 
 ## The application will be accessible at http://localhost:8080.
