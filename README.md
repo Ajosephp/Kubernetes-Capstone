@@ -2,46 +2,79 @@
 
 # Assignment 02 - Go Application with Docker
 
-## Description
+Ensure you have a running Kubernetes cluster and `kubectl` configured.
 
-This is a simple Go application that supports three endpoints:
+### Apply Kubernetes Configuration:
 
-- `GET /foo`: Returns "bar".
-- `POST /hello`: Accepts JSON `{"name": "YourName"}` and returns "Hello YourName!".
-- `GET /kill`: Shuts down the server.
+1. Apply the namespace, ConfigMap, Secret, Deployment, and Service:
+    ```bash
+    kubectl apply -f ubernetes-deployment.yaml
+    ```
 
-## Prerequisites
+    *Note: The namespace will be created automatically as defined in `kubernetes-deployment.yaml`.*
 
-- Docker installed on your machine.
-- Access to the internet to pull the Docker image.
+2. Verify the deployment:
+    ```bash
+    kubectl get all -n apeterson30
+    ```
 
-## Docker Instructions
+    *This command will list all resources in the `apeterson30` namespace.*
 
-### Pull the Docker Image
+3. Access the application at [http://localhost:30000](http://localhost:30000).
 
-To pull the Docker image, use the following command:
-```bash
-docker pull apeterson30/assignment02:latest
-```
-Run the container and map port 8080:
-```bash
-docker run -p 8080:8080 apeterson30/assignment02:latest
-```
+## Testing the Endpoints
 
-## The application will be accessible at http://localhost:8080.
+1. **GET /foo**
+    ```bash
+    curl http://localhost:30000/foo
+    ```
+    **Response:**
+    ```
+    bar
+    ```
 
-Testing the Endpoints
-1. GET /foo
-```bash
-curl http://localhost:8080/foo
-```
+2. **POST /hello**
+    ```bash
+    curl -H "Accept: application/json" -H "Content-Type: application/json" -X POST --data '{"name": "YourName"}' http://localhost:30000/hello
+    ```
+    **Response:**
+    ```
+    Hello YourName!
+    ```
 
-2. POST /hello
-```bash
-curl -H "Accept: application/json" -H "Content-Type: application/json" -X POST --data '{"name": "YourName"}' http://localhost:8080/hello
-```
+3. **GET /kill**
+    ```bash
+    curl http://localhost:30000/kill
+    ```
+    **Response:**
+    ```
+    Shutting down...
+    ```
+    *(The server will shut down after this request.)*
 
-3. GET /kill
-```bash
-curl http://localhost:8080/kill
-```
+4. **GET /configValue**
+    ```bash
+    curl http://localhost:30000/configValue
+    ```
+    **Response:**
+    ```
+    snake
+    ```
+
+5. **GET /secretValue**
+    ```bash
+    curl http://localhost:30000/secretValue
+    ```
+    **Response:**
+    ```
+    secretSnake
+    ```
+
+6. **GET /envValue**
+    ```bash
+    curl http://localhost:30000/envValue
+    ```
+    **Response:**
+    ```
+    environmentSnake
+    ```
