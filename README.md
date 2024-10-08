@@ -6,7 +6,7 @@ Ensure you have a running Kubernetes cluster and `kubectl` configured.
 
 ### Apply Kubernetes Configuration:
 
-1. Apply the namespace, ConfigMap, Secret, Deployment, and Service:
+1. Apply the namespace, ConfigMap, Secret, Deployment, and Service from the main 4016Assignment folder:
     ```bash
     kubectl apply -f kubernetes-deployment.yaml
     ```
