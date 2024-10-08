@@ -8,7 +8,7 @@ Ensure you have a running Kubernetes cluster and `kubectl` configured.
 
 1. Apply the namespace, ConfigMap, Secret, Deployment, and Service:
     ```bash
-    kubectl apply -f ubernetes-deployment.yaml
+    kubectl apply -f kubernetes-deployment.yaml
     ```
 
     *Note: The namespace will be created automatically as defined in `kubernetes-deployment.yaml`.*
