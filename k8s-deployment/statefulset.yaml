@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: docker-gs-ping-statefulset
+  namespace: apeterson30
+spec:
+  serviceName: docker-gs-ping-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docker-gs-ping
+  template:
+    metadata:
+      labels:
+        app: docker-gs-ping
+    spec:
+      containers:
+        - name: docker-gs-ping
+          image: apeterson30/assignment03:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+            - containerPort: 30010
+          resources:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "500m"
+          volumeMounts:
+            - name: data-volume
+              mountPath: /data
+          env:
+            - name: CONFIG_VALUE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: configValue
+            - name: SECRET_VALUE
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: secretValue
+            - name: ENV_VALUE
+              value: environmentSnake
+          readinessProbe:
+            exec:
+              command: ["/bin/sh", "-c", "curl -f http://localhost:30010/isAlive || exit 1"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+  volumeClaimTemplates:
+    - metadata:
+        name: data-volume
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

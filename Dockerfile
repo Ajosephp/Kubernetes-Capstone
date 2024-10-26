@@ -18,6 +18,9 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o docker-gs-ping
 FROM alpine:latest
 WORKDIR /root/
 
+# Install curl for readiness probe
+RUN apk add --no-cache curl
+
 # Copy the executable from the builder stage
 COPY --from=builder /app/docker-gs-ping .
 

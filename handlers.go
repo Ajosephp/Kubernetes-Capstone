@@ -3,9 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"net/http"
 	"os"
 	"time"
+
+	"golang.org/x/exp/rand"
 )
 
 // homeHandler serves the "/" route with a simple hello message.
@@ -81,4 +84,67 @@ func envValueHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Fprint(w, value)
+}
+
+// Assign03 Below:
+func saveStringHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		var payload struct {
+			Data string `json:"data"`
+		}
+		err := json.NewDecoder(r.Body).Decode(&payload)
+		if err != nil || payload.Data == "" {
+			http.Error(w, "Invalid or missing 'data' field", http.StatusBadRequest)
+			return
+		}
+		// Write the data to a file in the mounted volume
+		err = os.WriteFile("/data/saved_string.txt", []byte(payload.Data), 0644)
+		if err != nil {
+			http.Error(w, "Failed to save data", http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+	} else {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func getStringHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		data, err := os.ReadFile("/data/saved_string.txt")
+		if err != nil {
+			if os.IsNotExist(err) {
+				http.Error(w, "Data not found", http.StatusNotFound)
+			} else {
+				http.Error(w, "Failed to read data", http.StatusInternalServerError)
+			}
+			return
+		}
+		w.Write(data)
+	} else {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func busyWaitHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		w.Write([]byte("Starting CPU-intensive task..."))
+		go func() {
+			end := time.Now().Add(3 * time.Minute)
+			for time.Now().Before(end) {
+				// Perform some CPU-intensive calculations
+				_ = math.Sqrt(float64(rand.Intn(1000000)))
+			}
+		}()
+	} else {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	}
+}
+
+func isAliveHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		w.Write([]byte("true"))
+	} else {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+	}
 }

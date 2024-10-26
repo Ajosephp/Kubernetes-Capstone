@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-gs-ping-service
+  namespace: apeterson30
+spec:
+  type: LoadBalancer
+  selector:
+    app: docker-gs-ping
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
