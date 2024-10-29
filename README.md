@@ -67,3 +67,12 @@ If using Docker Desktop, apply the included components.yaml in k8s-deployment to
     Check Pod Readiness and Troubleshoot:
     After applying manifests, check pod readiness:
     ```kubectl describe pod docker-gs-ping-statefulset-0 -n apeterson30```
+
+5. Accessing the /isAlive Endpoint
+
+Once the Kubernetes Service is running, you can access the /isAlive endpoint to check the health of the docker-gs-ping application. This endpoint is exposed on port 30010 through the Service.
+```
+kubectl get service docker-gs-ping-service -n apeterson30
+```
+Note the EXTERNAL-IP of the docker-gs-ping-service.
+```curl http://<EXTERNAL-IP>:30010/isAlive```
