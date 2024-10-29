@@ -8,6 +8,11 @@ spec:
   selector:
     app: docker-gs-ping
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 8080
       targetPort: 8080
+    - name: secondary
+      protocol: TCP
+      port: 30010
+      targetPort: 30010
