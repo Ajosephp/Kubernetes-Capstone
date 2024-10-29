@@ -1,80 +1,69 @@
 ### README:
 
-# Assignment 02 - Go Application with Docker
+# Assignment 03 - Go Application with Docker
 
 Ensure you have a running Kubernetes cluster and `kubectl` configured.
+Metrics Server Configuration
+
+If using Docker Desktop, apply the included components.yaml in k8s-deployment to configure the metrics-server with --kubelet-insecure-tls. This is required for the Horizontal Pod Autoscaler (HPA) to function:
 
 ### Apply Kubernetes Configuration:
 
-1. Apply the namespace, ConfigMap, Secret, Deployment, and Service from the main 4016Assignment folder:
+1. Apply the namespace, ConfigMap, Secret, Service, StatefulSet and HPA from the k8's-deployment folder.
     ```bash
-    kubectl apply -f kubernetes-deployment.yaml
+    kubectl apply -f k8s-deployment/namespace.yaml
+    kubectl apply -f k8s-deployment/configmap.yaml
+    kubectl apply -f k8s-deployment/secret.yaml
+    kubectl apply -f k8s-deployment/service.yaml
+    kubectl apply -f k8s-deployment/statefulset.yaml
+    kubectl apply -f k8s-deployment/hpa.yaml
     ```
 
-    *Note: The namespace will be created automatically as defined in `kubernetes-deployment.yaml`.*
-
-2. Verify the deployment:
+2. Check that all resources are created and running:
     ```bash
-    kubectl get all -n apeterson30
-    ```
+    Pods:
+    kubectl get pods -n apeterson30
 
-    *This command will list all resources in the `apeterson30` namespace.*
+    Services:
+    kubectl get svc -n apeterson30
 
-3. Access the application at [http://localhost:30000](http://localhost:30000).
+    Persistent Volume Claims:
+    kubectl get pvc -n apeterson30
 
-## Testing the Endpoints
+    Horizontal Pod Autoscaler:
+    kubectl get hpa -n apeterson30
+    ```
+3. Key Features and Endpoints
+    Data Persistence:
+        Save data with POST /saveString
+        Retrieve saved data with GET /getString
 
-1. **GET /foo**
-    ```bash
-    curl http://localhost:30000/foo
-    ```
-    **Response:**
-    ```
-    bar
-    ```
+    CPU Load Simulation:
+        Trigger CPU-intensive work with GET /busywait to test HPA scaling.
 
-2. **POST /hello**
-    ```bash
-    curl -H "Accept: application/json" -H "Content-Type: application/json" -X POST --data '{"name": "YourName"}' http://localhost:30000/hello
-    ```
-    **Response:**
-    ```
-    Hello YourName!
-    ```
+    Health Checks:
+        /isAlive readiness probe ensures only healthy pods serve requests.
 
-3. **GET /kill**
-    ```bash
-    curl http://localhost:30000/kill
-    ```
-    **Response:**
-    ```
-    Shutting down...
-    ```
-    *(The server will shut down after this request.)*
+4. Testing Steps
 
-4. **GET /configValue**
-    ```bash
-    curl http://localhost:30000/configValue
-    ```
-    **Response:**
-    ```
-    snake
-    ```
+    Test Data Persistence:
+        Save a string to the volume:
+        ```curl -X POST -H "Content-Type: application/json" -d '{"data": "testPersistence"}' localhost:8080/saveString```
 
-5. **GET /secretValue**
-    ```bash
-    curl http://localhost:30000/secretValue
-    ```
-    **Response:**
-    ```
-    secretSnake
-    ```
+    Verify retrieval:
+        ```curl localhost:8080/getString```
 
-6. **GET /envValue**
-    ```bash
-    curl http://localhost:30000/envValue
-    ```
-    **Response:**
-    ```
-    environmentSnake
-    ```
+    Restart the pod and confirm persistence:
+    ```kubectl delete pod docker-gs-ping-statefulset-0 -n apeterson30```
+    ```curl localhost:8080/getString  # Run after the pod is Ready```
+
+    Verify Autoscaling:
+    Simulate high CPU usage:
+    ```curl localhost:8080/busywait```
+
+    Monitor scaling:
+    ```kubectl get hpa -n apeterson30 -w```
+
+    Check Pod Readiness and Troubleshoot:
+    After applying manifests, check pod readiness:
+    ```kubectl describe pod docker-gs-ping-statefulset-0 -n apeterson30```
