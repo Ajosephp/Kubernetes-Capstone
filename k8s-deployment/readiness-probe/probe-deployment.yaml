@@ -1,0 +1,31 @@
+# 4016assignment/k8s-deployment/readiness-probe/probe-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: isalive-deployment
+  namespace: probe
+  labels:
+    app: isalive
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: isalive
+  template:
+    metadata:
+      labels:
+        app: isalive
+    spec:
+      containers:
+        - name: isalive-container
+          image: apeterson30/assignment03:latest  # Use your existing image
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 30010
+          readinessProbe:
+            httpGet:
+              path: /isAlive
+              port: 30010
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10

@@ -33,6 +33,21 @@ If using Docker Desktop, apply the included components.yaml in k8s-deployment to
     Horizontal Pod Autoscaler:
     kubectl get hpa -n apeterson30
     ```
+    B. Readiness Probe Resources
+
+    Apply the Probe Namespace, Deployment, and Service:
+    ```bash
+    kubectl apply -f readiness-probe/probe-namespace.yaml
+    kubectl apply -f readiness-probe/probe-deployment.yaml
+    kubectl apply -f readiness-probe/probe-service.yaml
+    ```
+    Verify Probe Resources:
+    # Pods in Probe Namespace
+    ```kubectl get pods -n probe```
+
+    # Services in Probe Namespace
+    ```kubectl get svc -n probe```
+
 3. Key Features and Endpoints
     Data Persistence:
         Save data with POST /saveString

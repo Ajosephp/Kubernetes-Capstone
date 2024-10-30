@@ -1,0 +1,5 @@
+# 4016assignment/k8s-deployment/readiness-probe/probe-namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: probe

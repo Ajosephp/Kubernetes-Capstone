@@ -1,0 +1,13 @@
+# 4016assignment/k8s-deployment/readiness-probe/probe-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: isalive-service
+  namespace: probe
+spec:
+  selector:
+    app: isalive
+  ports:
+    - protocol: TCP
+      port: 30010
+      targetPort: 30010

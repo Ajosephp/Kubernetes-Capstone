@@ -44,7 +44,10 @@ spec:
               value: environmentSnake
           readinessProbe:
             exec:
-              command: ["/bin/sh", "-c", "curl -f http://localhost:30010/isAlive || exit 1"]
+              command:
+                - /bin/sh
+                - -c
+                - curl -f http://isalive-service.probe.svc.cluster.local:30010/isAlive || exit 1
             initialDelaySeconds: 5
             periodSeconds: 10
 
