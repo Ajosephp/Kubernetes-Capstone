@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: isalive-container
-          image: apeterson30/assignment03:latest  # Use your existing image
+          image: apeterson30/assignment03:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 30010
